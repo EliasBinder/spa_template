@@ -1,8 +1,8 @@
 const {CACHE, readScreenToCache, readComponentToCache} = require('./cacheMgr');
-const {passLang} = require('./languageParser');
+const {parseContent} = require('./languageParser');
 
 
-const getHtml = (language, prefix, object) => {
+const getHtml = (languages, prefix, object) => {
     if (!CACHE.has(prefix + object)) {
         if (prefix === 's#')
             readScreenToCache(object);
@@ -10,10 +10,10 @@ const getHtml = (language, prefix, object) => {
             readComponentToCache(object);
     }
     const content = CACHE.get(prefix + object).html;
-    return passLang(language, content);
+    return parseContent(languages, content);
 }
 
-const getJs = (language, prefix, object) => {
+const getJs = (languages, prefix, object) => {
     if (!CACHE.has(prefix + object)) {
         if (prefix === 's#')
             readScreenToCache(object);
@@ -23,23 +23,23 @@ const getJs = (language, prefix, object) => {
     const content = CACHE.get(prefix + object).js;
     if (content === undefined)
         return '';
-    return passLang(language, content);
+    return parseContent(languages, content);
 }
 
-const getScreenHtml = (language, screen) => {
-    return getHtml(language, 's#', screen);
+const getScreenHtml = (languages, screen) => {
+    return getHtml(languages, 's#', screen);
 }
 
-const getScreenJs = (language, screen) => {
-    return getJs(language, 's#', screen);
+const getScreenJs = (languages, screen) => {
+    return getJs(languages, 's#', screen);
 }
 
-const getComponentHtml = (language, component) => {
-    return getHtml(language, 'c#', component);
+const getComponentHtml = (languages, component) => {
+    return getHtml(languages, 'c#', component);
 }
 
-const getComponentJs = (language, component) => {
-    return getJs(language, 'c#', component);
+const getComponentJs = (languages, component) => {
+    return getJs(languages, 'c#', component);
 }
 
 module.exports = {getScreenHtml, getScreenJs, getComponentHtml, getComponentJs};

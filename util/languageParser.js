@@ -3,17 +3,41 @@ const path = require("path");
 
 const LANGCACHE = new Map();
 
-const passLang = (langauge, input) => {
-    if (!fs.existsSync(path.join(__dirname, 'lang', langauge + '.json')))
-        langauge = 'en';
+const parseLanguagesFiled = (languages) => {
+    if (Array.isArray(languages)) {
+        let result = [];
+        languages.forEach((lang) => {
+            let simplifiedLang;
+            if (lang.includes('-'))
+                simplifiedLang = lang.split('-')[0].toLowerCase();
+            else if (lang.includes('_'))
+                simplifiedLang = lang.split('_')[0].toLowerCase();
+            else
+                simplifiedLang = lang.toLowerCase();
+            if (!result.includes(simplifiedLang))
+                result.push(encodeURIComponent(simplifiedLang));
+        });
+        return result;
+    }
+    return ['en'];
+}
 
-    let langJson = {};
+const parseContent = (languages, input) => {
+    languages = parseLanguagesFiled(languages);
+    let langToUse = 'en';
+    for (let lang of languages) {
+        if (LANGCACHE.has(lang) || fs.existsSync(path.join(__dirname, '..', 'languages', lang + '.json'))) {
+            langToUse = lang;
+            break;
+        }
+    }
 
-    if (LANGCACHE.has(langauge)) {
-        langJson = LANGCACHE.get(langauge);
+    let langJson = {}
+    if (LANGCACHE.has(langToUse)) {
+        langJson = LANGCACHE.get(langToUse);
     } else {
-        langJson = require(`../lang/${langauge}.json`);
-        LANGCACHE.set(langauge, langJson);
+        langJson = require(`../languages/${langToUse}.json`);
+        LANGCACHE.set(langToUse, langJson);
     }
 
     return input.replace(/{{lang:(.*?)}}/g, (match, p1) => {
@@ -21,4 +45,4 @@ const passLang = (langauge, input) => {
     });
 }
 
-module.exports = {passLang};
+module.exports = {parseContent};

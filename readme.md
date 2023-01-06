@@ -35,14 +35,14 @@ window.injectComponent(
 ```
 
 ## ToDos:
-- [ ] Add automatic language detection -> replace hard coded `en`
-- [ ] Refactor & simplify cacheMgr.js
-- [ ] Rewrite description and notes in readme.md
+- [x] Add automatic language detection -> replace hard coded `en`
+- [ ] Rewrite documentation in readme.md
 - [ ] Add possibility to use jsx
 - [ ] Add back button feature and unique paths in url
 - [ ] Allow for information to be passed through component hierarchy
-- [ ] Allow server side components and sever managed components
-- [ ] Add live preview of development
+- [ ] Allow sever managed components
+  - [ ] Add live preview of development
+- [ ] Dump cache on server restart
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

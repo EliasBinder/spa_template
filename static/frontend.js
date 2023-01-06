@@ -15,7 +15,7 @@ createSocket('ui', window.location.href).then(() => {
 
         //Prepare request data
         let reqData = {
-            language: 'en',
+            languages: window.navigator.languages,
             lastModified,
         }
         if (prefix === 'c#')

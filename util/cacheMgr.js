@@ -5,9 +5,7 @@ const staticContentMgr = require("./staticContentMgr");
 
 const CACHE = new Map();
 
-//TODO: optimize this -> collapse into one function
-
-const readScreenToCache = (screen) => {
+const readToCache = (type, object) => {
     let htmlContent = '';
     let cssContent = '';
     let jsContent = '';
@@ -33,80 +31,21 @@ const readScreenToCache = (screen) => {
             }
         });
     }
-    parseDir(path.join(__dirname, '..', 'screens', screen));
+
+    if (!fs.existsSync(path.join(__dirname, '..', type + 's', encodeURIComponent(object))))
+        return;
+
+    parseDir(path.join(__dirname, '..', type + 's', encodeURIComponent(object)));
 
     //combine html and css
-    if (htmlContent.includes('{{style}}')) {
-        htmlContent = htmlContent.replace('{{style}}', `<style>${cssContent}</style>`);
-    } else {
-        htmlContent += `<style>${cssContent}</style>`;
-    }
-
-    //fill html and js with config values
-    htmlContent = htmlContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
-        return config[p1] || '';
-    });
-    jsContent = jsContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
-        return config[p1] || '';
-    });
-
-    if (htmlContent.includes('{{framework}}')) {
-        htmlContent = htmlContent.replace('{{framework}}', '<script>' + staticContentMgr.getJsContent() + '</script>');
-    }
-
-    //combine html and js when script placeholder is present
-    if (htmlContent.includes('{{script}}')) {
-        htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
-        CACHE.set('s#' + screen, {
-            html: htmlContent,
-            lastModified: Date.now()
-        });
-    } else {
-        CACHE.set('s#' + screen, {
-            html: htmlContent,
-            js: jsContent,
-            lastModified: Date.now()
-        });
-    }
-}
-
-const readComponentToCache = (component) => {
-    let htmlContent = '';
-    let cssContent = '';
-    let jsContent = '';
-
-    const parseFile = (file) => {
-        if (path.extname(file) === '.html') {
-            htmlContent += fs.readFileSync(file, 'utf8') + '\n';
-        } else if (path.extname(file) === '.css') {
-            cssContent += fs.readFileSync(file, 'utf8') + '\n';
-        } else if (path.extname(file) === '.js') {
-            jsContent += fs.readFileSync(file, 'utf8') + '\n';
+    if (cssContent.trim() !== '') {
+        if (htmlContent.includes('{{style}}')) {
+            htmlContent = htmlContent.replace('{{style}}', `<style>${cssContent}</style>`);
+        } else {
+            htmlContent += `<style>${cssContent}</style>`;
         }
     }
 
-    const parseDir = (dir) => {
-        const files = fs.readdirSync(dir);
-        files.forEach(file => {
-            const filePath = path.join(dir, file);
-            if (fs.lstatSync(filePath).isFile()) {
-                parseFile(filePath);
-            }
-        });
-    }
-
-    if (!fs.existsSync(path.join(__dirname, '..', 'components', component)))
-        return;
-
-    parseDir(path.join(__dirname, '..', 'components', component));
-
-    //combine html and css
-    if (htmlContent.includes('{{style}}')) {
-        htmlContent = htmlContent.replace('{{style}}', `<style>${cssContent}</style>`);
-    } else {
-        htmlContent += `<style>${cssContent}</style>`;
-    }
-
     //fill html and js with config values
     htmlContent = htmlContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
         return config[p1] || '';
@@ -115,11 +54,35 @@ const readComponentToCache = (component) => {
         return config[p1] || '';
     });
 
-    CACHE.set('c#' + component, {
-        html: htmlContent,
-        js: jsContent,
+    if (type === 'screen' && object === 'index' && htmlContent.includes('{{framework}}')) {
+        htmlContent = htmlContent.replace('{{framework}}', '<script>' + staticContentMgr.getJsContent() + '</script>');
+    }
+
+    if (type === 'screen') {
+        if (htmlContent.includes('{{script}}')) {
+            htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
+            jsContent = '';
+        }else {
+            console.warn('Screen ' + object + ' does not have a script placeholder. It\'s javascript will not be loaded.');
+        }
+    }
+
+    let toCache = {
         lastModified: Date.now()
-    });
+    }
+    if (htmlContent.trim() !== '')
+        toCache.html = htmlContent;
+    if (jsContent.trim() !== '')
+        toCache.js = jsContent;
+    CACHE.set(type[0] + '#' + object, toCache);
+}
+
+const readScreenToCache = (screen) => {
+    readToCache('screen', screen);
+}
+
+const readComponentToCache = (component) => {
+    readToCache('component', component);
 }
 
 const getLastModified = (key) => {
