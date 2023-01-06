@@ -6,7 +6,7 @@ window._spa = {
 }
 
 const spa_init = (callback) => {
-    callback(window._spa.loadingObject.data);
+    callback({...window._spa.loadingObject.data});
 }
 
 window.spa = {
