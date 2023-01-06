@@ -5,6 +5,34 @@ const staticContentMgr = require("./staticContentMgr");
 
 const CACHE = new Map();
 
+const cache2File = () => {
+    console.log('Writing cache to file...');
+    const cacheFile = path.join(__dirname, '..', 'cache.json');
+    fs.writeFileSync(cacheFile, JSON.stringify(Object.fromEntries(CACHE)), 'utf8');
+    console.log('Cache written to file.');
+}
+
+const file2Cache = () => {
+    console.log('Reading cache from file...');
+    const cacheFile = path.join(__dirname, '..', 'cache.json');
+    if (fs.existsSync(cacheFile)) {
+        const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+        for (let key in cache) {
+            //compile the object again to make sure it's up-to-date
+            readToCache(key[0]==='c'?'component':'screen', key.substr(2));
+
+            const newCachedItem = CACHE.get(key);
+            if (newCachedItem) {
+                //compare if the object in the cache file is equal to the compiled object
+                if (cache[key].html === newCachedItem.html && cache[key].js === newCachedItem.js) {
+                    //if equal, update the lastModified value
+                    newCachedItem.lastModified = cache[key].lastModified;
+                }
+            }
+        }
+    }
+    console.log('Cache read from file.');
+}
 const readToCache = (type, object) => {
     let htmlContent = '';
     let cssContent = '';
@@ -58,13 +86,9 @@ const readToCache = (type, object) => {
         htmlContent = htmlContent.replace('{{framework}}', '<script>' + staticContentMgr.getJsContent() + '</script>');
     }
 
-    if (type === 'screen') {
-        if (htmlContent.includes('{{script}}')) {
-            htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
-            jsContent = '';
-        }else {
-            console.warn('Screen ' + object + ' does not have a script placeholder. It\'s javascript will not be loaded.');
-        }
+    if (type === 'screen' && htmlContent.includes('{{script}}')) {
+        htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
+        jsContent = '';
     }
 
     let toCache = {
@@ -95,6 +119,8 @@ const getLastModified = (key) => {
 
 module.exports = {
     CACHE,
+    cache2File,
+    file2Cache,
     readScreenToCache,
     readComponentToCache,
     getLastModified

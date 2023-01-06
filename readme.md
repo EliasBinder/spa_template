@@ -42,7 +42,7 @@ window.injectComponent(
 - [ ] Allow for information to be passed through component hierarchy
 - [ ] Allow sever managed components
   - [ ] Add live preview of development
-- [ ] Dump cache on server restart
+- [x] Dump cache on server restart
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
