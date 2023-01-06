@@ -1,3 +1,4 @@
 {
-  "name": "SPA-Framework"
+  "name": "SPA-Framework",
+  "initialScreen": "home"
 }

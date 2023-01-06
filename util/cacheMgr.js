@@ -5,7 +5,7 @@ const staticContentMgr = require("./staticContentMgr");
 
 const CACHE = new Map();
 
-//TODO: optimize this
+//TODO: optimize this -> collapse into one function
 
 const readScreenToCache = (screen) => {
     let htmlContent = '';
@@ -42,8 +42,11 @@ const readScreenToCache = (screen) => {
         htmlContent += `<style>${cssContent}</style>`;
     }
 
-    //fill html with config values
+    //fill html and js with config values
     htmlContent = htmlContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
+        return config[p1] || '';
+    });
+    jsContent = jsContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
         return config[p1] || '';
     });
 
@@ -56,11 +59,13 @@ const readScreenToCache = (screen) => {
         htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
         CACHE.set('s#' + screen, {
             html: htmlContent,
+            lastModified: Date.now()
         });
     } else {
         CACHE.set('s#' + screen, {
             html: htmlContent,
             js: jsContent,
+            lastModified: Date.now()
         });
     }
 }
@@ -89,6 +94,10 @@ const readComponentToCache = (component) => {
             }
         });
     }
+
+    if (!fs.existsSync(path.join(__dirname, '..', 'components', component)))
+        return;
+
     parseDir(path.join(__dirname, '..', 'components', component));
 
     //combine html and css
@@ -98,19 +107,32 @@ const readComponentToCache = (component) => {
         htmlContent += `<style>${cssContent}</style>`;
     }
 
-    //fill html with config values
+    //fill html and js with config values
     htmlContent = htmlContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
+        return config[p1] || '';
+    });
+    jsContent = jsContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
         return config[p1] || '';
     });
 
     CACHE.set('c#' + component, {
         html: htmlContent,
         js: jsContent,
+        lastModified: Date.now()
     });
+}
+
+const getLastModified = (key) => {
+    const item = CACHE.get(key);
+    if (item) {
+        return item.lastModified;
+    }
+    return -1;
 }
 
 module.exports = {
     CACHE,
     readScreenToCache,
-    readComponentToCache
+    readComponentToCache,
+    getLastModified
 }

@@ -1,3 +1,3 @@
 const onUISocketReady = () => {
-    window.injectComponent(document.getElementById('app'), 'test');
+    window.setScreen('{{config:initialScreen}}');
 }

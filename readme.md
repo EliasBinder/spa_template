@@ -4,7 +4,7 @@
 This is a template for building single page applications.
 It uses a component and screen logic, known from React for example, to build the application.
 Internally, a minimalistic html code is sent to the client, which then loads the application and renders the components using Socket-IO to avoid the HTTP overhead and achieve faster loading times.
-In addition, the server uses caching to reduce loading times even further.
+In addition, the server and client both use caching to reduce loading times even further.
 
 ## Installation
 Clone the repository and run `npm install` to install all dependencies.
@@ -18,6 +18,10 @@ In order to create a screen, create a new folder in the `screens` folder with th
 Note that you can add css and js files as you wish, even several of one type. The server will automatically load them. 
 Note that it is sufficient to write only partial html code, tags like head, body, ... can be omitted, as those screens will be rendered directly into the `#app` div that can be found in the index screen. 
 The index screen is only meant to provide the framework and to load other screens. So only it is allowed to have a full html file.
+In order to set a different screen use:
+```
+window.setScreen('screen-name'); // The name of the screen, in particular the name of the screen's folder
+```
 
 ### Components
 Components are the building blocks of your application. They are used to build the screens.
@@ -31,10 +35,14 @@ window.injectComponent(
 ```
 
 ## ToDos:
-- [ ] Add a way to load a different screen
-- [ ] Cache the components client-side using LocalStorage and ServiceWorker
-- [ ] Add a possibility to add a loading gif
 - [ ] Add automatic language detection -> replace hard coded `en`
+- [ ] Refactor & simplify cacheMgr.js
+- [ ] Rewrite description and notes in readme.md
+- [ ] Add possibility to use jsx
+- [ ] Add back button feature and unique paths in url
+- [ ] Allow for information to be passed through component hierarchy
+- [ ] Allow server side components and sever managed components
+- [ ] Add live preview of development
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

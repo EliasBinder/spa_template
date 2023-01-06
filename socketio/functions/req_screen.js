@@ -1,7 +1,7 @@
 const renderer = require("../../util/renderer");
 const cacheMgr = require("../../util/cacheMgr");
 const handle = (socket, msg) => {
-    let lastModified = cacheMgr.getLastModified('c#' + msg.component);
+    let lastModified = cacheMgr.getLastModified('s#' + msg.screen);
     if (lastModified === msg.lastModified) {
         socket.emit('resp', {
             reqId: msg.reqId,
@@ -9,9 +9,9 @@ const handle = (socket, msg) => {
         });
         return;
     }
-    const html = renderer.getComponentHtml(msg.language, msg.component);
-    const js = renderer.getComponentJs(msg.language, msg.component);
-    lastModified = cacheMgr.getLastModified('c#' + msg.component);
+    const html = renderer.getScreenHtml(msg.language, msg.screen);
+    const js = renderer.getScreenJs(msg.language, msg.screen);
+    lastModified = cacheMgr.getLastModified('s#' + msg.screen);
     socket.emit('resp', {
         reqId: msg.reqId,
         html: html,
