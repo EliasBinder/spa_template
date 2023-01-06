@@ -1,5 +1,22 @@
+//Prepare api
+window._spa = {
+    loadingObject: {
+        data: {}
+    }
+}
+
+const spa_init = (callback) => {
+    callback(window._spa.loadingObject.data);
+}
+
+window.spa = {
+    init: spa_init
+}
+
+
+//Create UI Socket
 createSocket('ui', window.location.href).then(() => {
-    const inject = (container, object, prefix, loadingContainer) => {
+    const inject = (container, object, prefix, loadingContainer, data) => {
         //Display loading container
         if (loadingContainer)
             loadingContainer.style.removeProperty('display');
@@ -29,18 +46,21 @@ createSocket('ui', window.location.href).then(() => {
                 msg = localComponentObj;
             if (msg.html)
                 container.innerHTML = msg.html;
-            if (msg.js)
+            if (msg.js) {
+                window._spa.loadingObject.data = data;
                 eval(msg.js);
+                window._spa.loadingObject.data = {};
+            }
             if (loadingContainer)
                 loadingContainer.style.display = 'none';
             localStorage.setItem(prefix + object, JSON.stringify({html: msg.html, js: msg.js, lastModified: msg.lastModified}));
         });
     }
-    window.injectComponent = (container, component, loadingNode = null) => {
-        inject(container, component, 'c#', loadingNode);
+    window.injectComponent = (container, component, loadingNode = null, data= {}) => {
+        inject(container, component, 'c#', loadingNode, data);
     }
-    window.setScreen = (screen, loadingNode = null) => {
-        inject(document.getElementById('app'), screen, 's#', loadingNode);
+    window.setScreen = (screen, loadingNode = null, data = {}) => {
+        inject(document.getElementById('app'), screen, 's#', loadingNode, data);
     }
     if (onUISocketReady !== undefined)
         onUISocketReady();

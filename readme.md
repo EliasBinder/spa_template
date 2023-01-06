@@ -39,7 +39,7 @@ window.injectComponent(
 - [ ] Rewrite documentation in readme.md
 - [ ] Add possibility to use jsx
 - [ ] Add back button feature and unique paths in url
-- [ ] Allow for information to be passed through component hierarchy
+- [x] Allow for information to be passed through component hierarchy
 - [ ] Allow sever managed components
   - [ ] Add live preview of development
 - [x] Dump cache on server restart
