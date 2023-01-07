@@ -76,10 +76,20 @@ const readToCache = (type, object) => {
 
     //fill html and js with config values
     htmlContent = htmlContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
-        return config[p1] || '';
+        const path = p1.split('.');
+        let value = config;
+        path.forEach(p => {
+            value = value[p];
+        });
+        return value;
     });
     jsContent = jsContent.replace(/{{config:(.*?)}}/g, (match, p1) => {
-        return config[p1] || '';
+        const path = p1.split('.');
+        let value = config;
+        path.forEach(p => {
+            value = value[p];
+        });
+        return value;
     });
 
     if (type === 'screen' && object === 'index' && htmlContent.includes('{{framework}}')) {
