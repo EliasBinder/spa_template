@@ -9,7 +9,11 @@ const getHtml = (languages, prefix, object) => {
         else if (prefix === 'c#')
             readComponentToCache(object);
     }
+    if (!CACHE.has(prefix + object))
+        return '';
     const content = CACHE.get(prefix + object).html;
+    if (content === undefined)
+        return '';
     return parseContent(languages, content);
 }
 
@@ -20,6 +24,8 @@ const getJs = (languages, prefix, object) => {
         else if (prefix === 'c#')
             readComponentToCache(object);
     }
+    if (!CACHE.has(prefix + object))
+        return '';
     const content = CACHE.get(prefix + object).js;
     if (content === undefined)
         return '';

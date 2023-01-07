@@ -1,4 +1,6 @@
 {
   "name": "SPA-Framework",
-  "initialScreen": "home"
+  "description": "A simple SPA framework",
+  "initialScreen": "home",
+  "mode": "development"
 }

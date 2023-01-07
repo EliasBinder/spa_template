@@ -5,6 +5,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const staticContentMgr = require("./util/staticContentMgr");
 const cacheMgr = require("./util/cacheMgr");
+const directoryObserver = require("./util/directoryObserver");
 
 const app = express();
 
@@ -27,5 +28,8 @@ process.on('SIGINT', function () {
     cacheMgr.cache2File();
     process.exit(2);
 });
+
+//Watch for changes in screens and components
+directoryObserver.startWatching();
 
 module.exports = app;

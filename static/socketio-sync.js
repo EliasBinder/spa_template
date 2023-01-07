@@ -34,3 +34,10 @@ function emitSocketSync(socketId, channel, data, responseCallback) {
         });
     }
 }
+
+function emitSocket(socketId, channel, data) {
+    const socket = SOCKETS[socketId].socket;
+    if (socket.connected) {
+        socket.emit(channel, data);
+    }
+}

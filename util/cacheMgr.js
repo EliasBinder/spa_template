@@ -98,7 +98,8 @@ const readToCache = (type, object) => {
         toCache.html = htmlContent;
     if (jsContent.trim() !== '')
         toCache.js = jsContent;
-    CACHE.set(type[0] + '#' + object, toCache);
+    if (toCache.html.trim() !== '' || toCache.js.trim() !== '')
+        CACHE.set(type[0] + '#' + object, toCache);
 }
 
 const readScreenToCache = (screen) => {

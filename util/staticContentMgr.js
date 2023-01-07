@@ -7,6 +7,9 @@ const BUILD_ORDER = [
     'vendor/socketio.js',
     'util.js',
     'socketio-sync.js',
+    'uiFunctions/update_component.js',
+    'uiFunctions/update_screen.js',
+    'uiSocketHandler.js',
     'frontend.js'
 ]
 

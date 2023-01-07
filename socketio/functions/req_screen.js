@@ -1,8 +1,10 @@
 const renderer = require("../../util/renderer");
 const cacheMgr = require("../../util/cacheMgr");
+const {checkForParams} = require("../util");
 const handle = (socket, msg) => {
+    if (!checkForParams(msg, ['screen', 'languages', 'lastModified', 'reqId']))
+        return;
 
-    //TODO: check msg for validity
     let lastModified = cacheMgr.getLastModified('s#' + msg.screen);
     if (lastModified === msg.lastModified) {
         socket.emit('resp', {
@@ -14,6 +16,13 @@ const handle = (socket, msg) => {
     const html = renderer.getScreenHtml(msg.languages, msg.screen);
     const js = renderer.getScreenJs(msg.languages, msg.screen);
     lastModified = cacheMgr.getLastModified('s#' + msg.screen);
+    if (lastModified === -1){
+        socket.emit('resp', {
+            reqId: msg.reqId,
+            notFound: true
+        });
+        return;
+    }
     socket.emit('resp', {
         reqId: msg.reqId,
         html: html,
