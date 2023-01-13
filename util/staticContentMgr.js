@@ -4,13 +4,13 @@ const path = require("path");
 let jsContent = '';
 
 const BUILD_ORDER = [
-    'vendor/socketio.js',
+    'socketio/socketio.js',
     'util.js',
-    'socketio-sync.js',
+    'socketio/socketio-sync.js',
     'componentMgmt/component.js',
     'uiFunctions/update_component.js',
     'uiFunctions/update_screen.js',
-    'uiSocketHandler.js',
+    'socketio/uiSocketHandler.js',
     'frontend.js'
 ]
 
