@@ -1,13 +1,17 @@
+//TODO: subdivide into more files
+
 //Prepare api
 window._spa = {
     loadingObject: {
+        component: null,
         data: {}
     },
     currentScreen: null,
+    componentIds: {}
 }
 
 const spa_init = (callback) => {
-    callback({...window._spa.loadingObject.data});
+    callback(window._spa.loadingObject.component, {...window._spa.loadingObject.data});
 }
 
 window.spa = {
@@ -58,18 +62,40 @@ createSocket('ui', window.location.href).then(() => {
                 }
             }
 
-            if (msg.html)
-                container.innerHTML = msg.html;
+            const componentId = uuidv4();
+            if (msg.html) {
+                const preprocess = document.createElement('div');
+                preprocess.innerHTML = msg.html;
+                const parseChild = (child) => {
+                    if (child.hasAttribute('id')) {
+                        child.id = componentId + '-' + child.getAttribute('id');
+                    }
+                    if (child.getAttribute('for')) {
+                        child.setAttribute('for', componentId + '_' + child.getAttribute('for'));
+                    }
+                    if (child.children){
+                        for (let i = 0; i < child.children.length; i++) {
+                            parseChild(child.children[i]);
+                        }
+                    }
+                }
+                parseChild(preprocess);
+                container.innerHTML = preprocess.innerHTML;
+            }
             if (msg.js) {
                 window._spa.loadingObject.data = data;
+                const component = new Component(object, componentId);
+                window._spa.componentIds[componentId] = component;
+                window._spa.loadingObject.component = component;
                 eval(msg.js);
                 window._spa.loadingObject.data = {};
+                window._spa.loadingObject.id = null;
             }
 
             if (loadingContainer)
                 loadingContainer.style.display = 'none';
 
-            //Observe component
+            //Observe component for changes (delete, change)
             emitSocket('ui', 'observe_' + type, {
                 [type]: object,
                 action: 'add'
@@ -92,13 +118,14 @@ createSocket('ui', window.location.href).then(() => {
             component,
             action: 'remove'
         });
+        window._spa.componentIds[component.id].destroy();
 
         const elements = document.querySelectorAll('[component="' + component + '"]');
 
-        //recursively check all subcomponents weather they contain other components
+        //recursively check all subcomponents weather they contain other componentMgmt
         let compsToRemove = new Map();
         const checkComponent = (element, isRootLayer) => {
-            if (element.getAttribute('component') && !isRootLayer) {
+            if (element.hasAttribute('component') && !isRootLayer) {
                 if (element.getAttribute('component') !== component) {
                     //Add component to remove map
                     if (!compsToRemove.has(element.getAttribute('component')))
@@ -129,7 +156,7 @@ createSocket('ui', window.location.href).then(() => {
             }
         });
 
-        //Remove components themself
+        //Remove componentMgmt themself
         elements.forEach(element => {
             checkComponent(element, true);
             if (element.parentNode) { //Check if element is still in DOM

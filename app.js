@@ -29,7 +29,7 @@ process.on('SIGINT', function () {
     process.exit(2);
 });
 
-//Watch for changes in screens and components
+//Watch for changes in screens and componentMgmt
 directoryObserver.startWatching();
 
 module.exports = app;

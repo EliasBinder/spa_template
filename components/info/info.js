@@ -1,3 +1,3 @@
-spa.init((data) => {
-    document.getElementById('information').innerHTML = data.info;
+spa.init((component, data) => {
+    component.getElementById('information').innerHTML = data.info;
 });
