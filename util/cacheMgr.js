@@ -6,14 +6,14 @@ const staticContentMgr = require("./staticContentMgr");
 const CACHE = new Map();
 
 const cache2File = () => {
-    console.log('Writing cache to file...');
+    console.log('Exporting cache to file...');
     const cacheFile = path.join(__dirname, '..', 'cache.json');
     fs.writeFileSync(cacheFile, JSON.stringify(Object.fromEntries(CACHE)), 'utf8');
-    console.log('Cache written to file.');
+    console.log('Cache exported to file.');
 }
 
 const file2Cache = () => {
-    console.log('Reading cache from file...');
+    console.log('Importing cache from file...');
     const cacheFile = path.join(__dirname, '..', 'cache.json');
     if (fs.existsSync(cacheFile)) {
         const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
@@ -31,7 +31,7 @@ const file2Cache = () => {
             }
         }
     }
-    console.log('Cache read from file.');
+    console.log('Cache imported from file.');
 }
 const readToCache = (type, object) => {
     let htmlContent = '';
@@ -60,10 +60,14 @@ const readToCache = (type, object) => {
         });
     }
 
-    if (!fs.existsSync(path.join(__dirname, '..', type + 's', encodeURIComponent(object))))
+    const componentDir = path.join(__dirname, '..', type + 's', object);
+    const parentDir = path.join(__dirname, '..', type + 's');
+    if (!path.normalize(componentDir).startsWith(path.normalize(parentDir)))
+        return;
+    if (!fs.existsSync(componentDir))
         return;
 
-    parseDir(path.join(__dirname, '..', type + 's', encodeURIComponent(object)));
+    parseDir(componentDir);
 
     //combine html and css
     if (cssContent.trim() !== '') {
