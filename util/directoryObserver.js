@@ -6,7 +6,8 @@ const observerCallbacks = require("../socketio/observerCallbacks");
 const watchObjectDirectory = (pathToWatch) => {
     const parentFolderName = path.basename(pathToWatch);
     chokidar.watch(pathToWatch).on('unlinkDir', (_path) => {
-        observerCallbacks.onDeleted(parentFolderName[0], path.basename(_path));
+        const deletedComponent = _path.replace(pathToWatch + '/', '');
+        observerCallbacks.onDeleted(parentFolderName[0], deletedComponent);
     });
 }
 
