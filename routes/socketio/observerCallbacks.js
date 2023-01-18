@@ -27,7 +27,7 @@ const onDeleted = (type, object) => {
 }
 
 const onModified = (type, object) => {
-    console.log("Deleted " + (type==='s'?'screen':'component') + " " + object);
+    console.log("Changed " + (type==='s'?'screen':'component') + " " + object);
     cacheMgr.CACHE.delete(type + '#' + object);
     switch (type) {
         case 's':

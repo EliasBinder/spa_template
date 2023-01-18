@@ -20,7 +20,21 @@ const update_component = (msg) => {
             console.log("Component modified: " + msg.component);
             //Update UI
             const components2 = document.querySelectorAll('[component="' + msg.component + '"]');
-            //TODO
+            if (components2.length !== 0) {
+                for (let component of components2) {
+                    const componentId = component.getAttribute('component-id');
+                    const componentObj = _spa.componentIds[componentId];
+                    if (msg.html)
+                        component.innerHTML = msg.html;
+                    if (msg.js)
+                        eval(msg.js);
+                }
+            } else {
+                emitSocket('ui', 'observe_component', {
+                    component: msg.component,
+                    action: 'remove'
+                });
+            }
             //Update cache
             localStorage.setItem('c#' + msg.component, JSON.stringify({
                 html: msg.html,

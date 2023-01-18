@@ -22,7 +22,7 @@ class Component {
     //Dom manipulation
 
     getElementById(id) {
-        return document.getElementById(this.id + '-' + id);
+        return document.getElementById(this.internalId + '-' + id);
     }
 
     setRootDiv(div) {
