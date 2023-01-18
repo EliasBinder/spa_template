@@ -1,13 +1,13 @@
-const {CACHE, readScreenToCache, readComponentToCache} = require('./cacheMgr');
+const {CACHE, compileScreenToCache, compileComponentToCache} = require('./cacheMgr');
 const {parseContent} = require('./languageParser');
 
 
 const getHtml = (languages, prefix, object) => {
     if (!CACHE.has(prefix + object)) {
         if (prefix === 's#')
-            readScreenToCache(object);
+            compileScreenToCache(object);
         else if (prefix === 'c#')
-            readComponentToCache(object);
+            compileComponentToCache(object);
     }
     if (!CACHE.has(prefix + object))
         return '';
@@ -20,9 +20,9 @@ const getHtml = (languages, prefix, object) => {
 const getJs = (languages, prefix, object) => {
     if (!CACHE.has(prefix + object)) {
         if (prefix === 's#')
-            readScreenToCache(object);
+            compileScreenToCache(object);
         else if (prefix === 'c#')
-            readComponentToCache(object);
+            compileComponentToCache(object);
     }
     if (!CACHE.has(prefix + object))
         return '';

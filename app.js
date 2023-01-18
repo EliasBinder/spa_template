@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const staticContentMgr = require("./util/staticContentMgr");
+const staticContentMgr = require("./util/frameworkFrontendMgr");
 const cacheMgr = require("./util/cacheMgr");
 const directoryObserver = require("./util/directoryObserver");
 
@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', indexRouter);
+app.use('/assets', express.static('assets'));
 
 //build static content for frontend
 staticContentMgr.build();

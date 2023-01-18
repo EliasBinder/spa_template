@@ -8,6 +8,7 @@ const BUILD_ORDER = [
     'util.js',
     'socketio/socketio-sync.js',
     'componentMgmt/component.js',
+    'componentMgmt/componentLoader.js',
     'uiFunctions/update_component.js',
     'uiFunctions/update_screen.js',
     'socketio/uiSocketHandler.js',
@@ -17,7 +18,7 @@ const BUILD_ORDER = [
 const build = () => {
     console.log('Building static content...');
     BUILD_ORDER.forEach(file => {
-        jsContent += fs.readFileSync(path.join(__dirname, '..', 'static', file), 'utf8') + '\n';
+        jsContent += fs.readFileSync(path.join(__dirname, '..', 'framework_frontendJS', file), 'utf8') + '\n';
     });
     console.log('Static content built.');
 }

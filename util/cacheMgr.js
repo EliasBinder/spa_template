@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const config = require('../app.json');
-const staticContentMgr = require("./staticContentMgr");
+const staticContentMgr = require("./frameworkFrontendMgr");
 
 const CACHE = new Map();
 
@@ -116,11 +116,11 @@ const readToCache = (type, object) => {
         CACHE.set(type[0] + '#' + object, toCache);
 }
 
-const readScreenToCache = (screen) => {
+const compileScreenToCache = (screen) => {
     readToCache('screen', screen);
 }
 
-const readComponentToCache = (component) => {
+const compileComponentToCache = (component) => {
     readToCache('component', component);
 }
 
@@ -136,7 +136,7 @@ module.exports = {
     CACHE,
     cache2File,
     file2Cache,
-    readScreenToCache,
-    readComponentToCache,
+    compileScreenToCache,
+    compileComponentToCache,
     getLastModified
 }

@@ -1,5 +1,5 @@
-const renderer = require("../../util/renderer");
-const cacheMgr = require("../../util/cacheMgr");
+const renderer = require("../../../util/renderer");
+const cacheMgr = require("../../../util/cacheMgr");
 const {checkForParams} = require("../util");
 const handle = (socket, msg) => {
     if (!checkForParams(msg, ['screen', 'languages', 'lastModified', 'reqId']))

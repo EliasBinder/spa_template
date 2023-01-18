@@ -93,5 +93,5 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
   serveClient: false
 });
-const sioHandler = require('../socketio/ioHandler');
+const sioHandler = require('../routes/socketio/ioHandler');
 sioHandler.init(io);
