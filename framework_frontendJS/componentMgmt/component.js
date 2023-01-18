@@ -3,11 +3,20 @@ class Component {
     registeredEvents = new Map();
     rootDiv = null;
     active = false;
+    externalId = null;
 
     constructor(name, id) {
         this.name = name;
-        this.id = id;
+        this.internalId = id;
         this.active = true;
+    }
+
+    //API
+
+    setID(id) {
+        if (this.externalId)
+            delete window._spa.componentsMap[this.externalId]
+        window._spa.componentsMap[this.externalId] = this;
     }
 
     //Dom manipulation

@@ -5,7 +5,8 @@ window._spa = {
         data: {}
     },
     currentScreen: null,
-    componentIds: {}
+    componentIds: {},
+    componentsMap: {}
 }
 
 
@@ -13,7 +14,11 @@ window._spa = {
 
 window.spa = {
     init: (callback) => {
-            callback(window._spa.loadingObject.component, {...window._spa.loadingObject.data});
+            callback(window._spa.loadingObject.component, {...window._spa.loadingObject.data})
+        },
+
+    getComponentById: (id) => {
+            return _spa.componentsMap[id]
         }
 }
 
