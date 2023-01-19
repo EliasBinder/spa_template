@@ -19,7 +19,7 @@ const file2Cache = () => {
         const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
         for (let key in cache) {
             //compile the object again to make sure it's up-to-date
-            readToCache(key[0]==='c'?'component':'screen', key.substr(2));
+            compileToCache(key[0]==='c'?'component':'screen', key.substr(2));
 
             const newCachedItem = CACHE.get(key);
             if (newCachedItem) {
@@ -33,7 +33,7 @@ const file2Cache = () => {
     }
     console.log('Cache imported from file.');
 }
-const readToCache = (type, object) => {
+const compileToCache = (type, object) => {
     let htmlContent = '';
     let cssContent = '';
     let jsContent = '';
@@ -62,7 +62,7 @@ const readToCache = (type, object) => {
 
     const componentDir = path.join(__dirname, '..', type + 's', object);
     const parentDir = path.join(__dirname, '..', type + 's');
-    if (!path.normalize(componentDir).startsWith(path.normalize(parentDir)))
+    if (!path.normalize(componentDir).startsWith(path.normalize(parentDir))) //Prevent path traversal
         return;
     if (!fs.existsSync(componentDir))
         return;
@@ -117,11 +117,11 @@ const readToCache = (type, object) => {
 }
 
 const compileScreenToCache = (screen) => {
-    readToCache('screen', screen);
+    compileToCache('screen', screen);
 }
 
 const compileComponentToCache = (component) => {
-    readToCache('component', component);
+    compileToCache('component', component);
 }
 
 const getLastModified = (key) => {

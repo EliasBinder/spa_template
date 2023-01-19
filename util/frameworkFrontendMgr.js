@@ -19,6 +19,7 @@ const build = () => {
     console.log('Building static content...');
     BUILD_ORDER.forEach(file => {
         jsContent += fs.readFileSync(path.join(__dirname, '..', 'framework_frontendJS', file), 'utf8') + '\n';
+        //TODO: minify
     });
     console.log('Static content built.');
 }
