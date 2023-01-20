@@ -1,5 +1,5 @@
 spa.init((component, data) => {
-    window.injectComponent(
+    spa.injectComponent(
         component.getElementById('info'),
         'test/info',
         null,

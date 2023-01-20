@@ -1,3 +1,3 @@
-window.spa.init((component, data) => {
-    window.injectComponent(component.getElementById('test'), 'test');
+spa.init((component, data) => {
+    spa.injectComponent(component.getElementById('test'), 'test');
 });

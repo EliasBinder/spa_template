@@ -3,18 +3,19 @@ const {checkForParams} = require("../util");
 const STORAGE = {}
 
 const handle = (socket, msg) => {
-    if (!checkForParams(msg, ['component', 'action']))
+    if (!checkForParams(msg, ['type', 'name', 'action']))
         return;
+    const type = msg.type;
     if (msg.action === 'add') {
-        if (!STORAGE[msg.component])
-            STORAGE[msg.component] = [];
-        STORAGE[msg.component].push(socket)
+        if (!STORAGE[type[0] + '#' + msg.name])
+            STORAGE[type[0] + '#' + msg.name] = [];
+        STORAGE[type[0] + '#' + msg.name].push(socket)
     } else if (msg.action === 'remove') {
-        if (STORAGE[msg.component] === undefined)
+        if (STORAGE[type[0] + '#' + msg.name] === undefined)
             return;
-        STORAGE[msg.component] = STORAGE[msg.component].filter(s => s !== socket)
-        if (STORAGE[msg.component].length === 0)
-            delete STORAGE[msg.component];
+        STORAGE[type[0] + '#' + msg.name] = STORAGE[type[0] + '#' + msg.name].filter(s => s !== socket) //TODO shorten with slice
+        if (STORAGE[type[0] + '#' + msg.name].length === 0)
+            delete STORAGE[type[0] + '#' + msg.name];
     }
 }
 

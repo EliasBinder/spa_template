@@ -1,29 +1,38 @@
 const update_component = (msg) => {
     switch (msg.action) {
         case 'delete':
-            console.warn("Component deleted: " + msg.component);
+            console.warn(msg.type.toLowerCase() + " deleted: " + msg.name);
             emitSocket('ui', 'observe_component', {
-                component: msg.component,
+                name: msg.name,
+                type: msg.type,
                 action: 'remove'
             });
             //Update UI
-            const components = document.querySelectorAll('[component="' + msg.component + '"]');
-            if (components.length !== 0){
-                for (let component of components) {
-                    _spa.componentIds[component.getAttribute('component-id')].unlink();
+            if (msg.type === 'COMPONENT') {
+                const components = document.querySelectorAll('[component="' + msg.name + '"]');
+                if (components.length !== 0) {
+                    for (let component of components) {
+                        _spa.componentIds[component.getAttribute('component-id')].unlink();
+                    }
                 }
+            } else if (msg.type === 'SCREEN') {
+                if (window._spa.currentScreen === msg.screen)
+                    document.getElementById('app').innerHTML = '<h1 style="color: red">Current screen deleted! Please reload this page or set another initial screen</h1>'
             }
             //Remove from cache
-            localStorage.removeItem('c#' + msg.component);
+            localStorage.removeItem(msg.type[0] + '#' + msg.component);
             break;
         case 'modify':
-            console.log("Component modified: " + msg.component);
+            console.log(msg.type.toLowerCase() + " modified: " + msg.name);
             //Update UI
-            const components2 = document.querySelectorAll('[component="' + msg.component + '"]');
+            let components2;
+            if (msg.type === 'COMPONENT') {
+                components2 = document.querySelectorAll('[component="' + msg.name + '"]');
+            } else if (msg.type === 'SCREEN') {
+                components2 = [document.getElementById('app')];
+            }
             if (components2.length !== 0) {
                 for (let component of components2) {
-                    const componentId = component.getAttribute('component-id');
-                    const componentObj = _spa.componentIds[componentId];
                     if (msg.html)
                         component.innerHTML = msg.html;
                     if (msg.js)
@@ -31,12 +40,13 @@ const update_component = (msg) => {
                 }
             } else {
                 emitSocket('ui', 'observe_component', {
-                    component: msg.component,
+                    name: msg.name,
+                    type: msg.type,
                     action: 'remove'
                 });
             }
             //Update cache
-            localStorage.setItem('c#' + msg.component, JSON.stringify({
+            localStorage.setItem(msg.type[0] + '#' + msg.component, JSON.stringify({
                 html: msg.html,
                 js: msg.js,
                 lastModified: new Date().getTime()

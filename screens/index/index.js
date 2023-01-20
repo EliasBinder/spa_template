@@ -1,3 +1,3 @@
 const onUISocketReady = () => {
-    window.setScreen('{{config:initialScreen}}');
+    spa.setScreen('{{config:initialScreen}}');
 }

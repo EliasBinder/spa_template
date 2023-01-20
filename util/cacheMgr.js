@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const config = require('../app.json');
 const staticContentMgr = require("./frameworkFrontendMgr");
+const enums = require('./enums');
 
 const CACHE = new Map();
 
@@ -19,7 +20,7 @@ const file2Cache = () => {
         const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
         for (let key in cache) {
             //compile the object again to make sure it's up-to-date
-            compileToCache(key[0]==='c'?'component':'screen', key.substr(2));
+            compileToCache(key[0]==='C' ? enums.COMPONENT : enums.SCREEN, key.substr(2));
 
             const newCachedItem = CACHE.get(key);
             if (newCachedItem) {
@@ -34,6 +35,8 @@ const file2Cache = () => {
     console.log('Cache imported from file.');
 }
 const compileToCache = (type, object) => {
+    type = enums[type];
+
     let htmlContent = '';
     let cssContent = '';
     let jsContent = '';
@@ -60,8 +63,8 @@ const compileToCache = (type, object) => {
         });
     }
 
-    const componentDir = path.join(__dirname, '..', type + 's', object);
-    const parentDir = path.join(__dirname, '..', type + 's');
+    const componentDir = path.join(__dirname, '..', type.toLowerCase() + 's', object);
+    const parentDir = path.join(__dirname, '..', type.toLowerCase() + 's');
     if (!path.normalize(componentDir).startsWith(path.normalize(parentDir))) //Prevent path traversal
         return;
     if (!fs.existsSync(componentDir))
@@ -96,11 +99,11 @@ const compileToCache = (type, object) => {
         return value;
     });
 
-    if (type === 'screen' && object === 'index' && htmlContent.includes('{{framework}}')) {
+    if (type === 'SCREEN' && object === 'index' && htmlContent.includes('{{framework}}')) {
         htmlContent = htmlContent.replace('{{framework}}', '<script>' + staticContentMgr.getJsContent() + '</script>');
     }
 
-    if (type === 'screen' && htmlContent.includes('{{script}}')) {
+    if (type === 'SCREEN' && htmlContent.includes('{{script}}')) {
         htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
         jsContent = '';
     }
@@ -116,14 +119,6 @@ const compileToCache = (type, object) => {
         CACHE.set(type[0] + '#' + object, toCache);
 }
 
-const compileScreenToCache = (screen) => {
-    compileToCache('screen', screen);
-}
-
-const compileComponentToCache = (component) => {
-    compileToCache('component', component);
-}
-
 const getLastModified = (key) => {
     const item = CACHE.get(key);
     if (item) {
@@ -136,7 +131,6 @@ module.exports = {
     CACHE,
     cache2File,
     file2Cache,
-    compileScreenToCache,
-    compileComponentToCache,
+    compileToCache,
     getLastModified
 }

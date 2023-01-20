@@ -1,5 +1,4 @@
-const inject = (container, object, prefix, loadingContainer, data) => {
-    const type = prefix === 's#' ? 'screen' : 'component';
+const inject = (container, object, type, loadingContainer, data) => {
 
     //Display loading container
     if (loadingContainer) {
@@ -8,7 +7,7 @@ const inject = (container, object, prefix, loadingContainer, data) => {
     }
 
     //Get component from cache if it exists
-    let localComponent = localStorage.getItem(prefix + object);
+    let localComponent = localStorage.getItem(type[0] + '#' + object);
     let localComponentObj;
     let lastModified = 0;
     if (localComponent) {
@@ -20,17 +19,18 @@ const inject = (container, object, prefix, loadingContainer, data) => {
     const reqData = {
         languages: window.navigator.languages,
         lastModified,
-        [type]: object
+        name: object,
+        type
     }
     //Send request
-    emitSocketSync('ui', 'req_' + type, reqData, (msg) => {
+    emitSocketSync('ui', 'req_component', reqData, (msg) => {
         if (msg.notFound) {
-            msg.html = `<div style="color: red; font-size: 20px; font-weight: bold;">${type} with name ${object} not found</div>`;
+            msg.html = `<div style="color: red; font-size: 20px; font-weight: bold;">${type.toLowerCase()} with name ${object} not found</div>`;
             msg.js = '';
         } else {
             //Update cache
             if (!msg.notModified) {
-                localStorage.setItem(prefix + object, JSON.stringify({
+                localStorage.setItem(type[0] + '#' + object, JSON.stringify({
                     html: msg.html,
                     js: msg.js,
                     lastModified: msg.lastModified
@@ -78,8 +78,9 @@ const inject = (container, object, prefix, loadingContainer, data) => {
         }
 
         //Observe component for changes (delete, change)
-        emitSocket('ui', 'observe_' + type, {
-            [type]: object,
+        emitSocket('ui', 'observe_component', {
+            name: object,
+            type,
             action: 'add'
         });
     });

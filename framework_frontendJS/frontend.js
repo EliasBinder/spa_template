@@ -27,13 +27,13 @@ window.spa = {
 createSocket('ui', window.location.href).then(() => {
     addUIListeners(SOCKETS['ui'].socket);
 
-    window.injectComponent = (container, component, loadingNode = null, data= {}) => {
-        inject(container, component, 'c#', loadingNode, data);
+    window.spa.injectComponent = (container, component, loadingNode = null, data= {}) => { //TODO: shrink parameters
+        inject(container, component, 'COMPONENT', loadingNode, data);
         container.setAttribute('component', component);
     }
 
-    window.setScreen = (screen, loadingNode = null, data = {}) => {
-        inject(document.getElementById('app'), screen, 's#', loadingNode, data);
+    window.spa.setScreen = (screen, loadingNode = null, data = {}) => { //TODO: shrink parameters
+        inject(document.getElementById('app'), screen, 'SCREEN', loadingNode, data);
         window._spa.currentScreen = screen;
     }
 

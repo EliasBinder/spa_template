@@ -1,51 +1,36 @@
-const {CACHE, compileScreenToCache, compileComponentToCache} = require('./cacheMgr');
+const {CACHE, compileToCache} = require('./cacheMgr');
 const {parseContent} = require('./languageParser');
 
 
-const getHtml = (languages, prefix, object) => {
-    if (!CACHE.has(prefix + object)) {
-        if (prefix === 's#')
-            compileScreenToCache(object);
-        else if (prefix === 'c#')
-            compileComponentToCache(object);
+const getHtml = (languages, type, object) => {
+    if (!CACHE.has(type[0] + '#' + object)) {
+        compileToCache(type, object);
     }
-    if (!CACHE.has(prefix + object))
+    if (!CACHE.has(type[0] + '#' + object))
         return '';
-    const content = CACHE.get(prefix + object).html;
+    const content = CACHE.get(type[0] + '#' + object).html;
     if (content === undefined)
         return '';
     return parseContent(languages, content);
 }
 
-const getJs = (languages, prefix, object) => {
-    if (!CACHE.has(prefix + object)) {
-        if (prefix === 's#')
-            compileScreenToCache(object);
-        else if (prefix === 'c#')
-            compileComponentToCache(object);
+/**
+ *
+ * @param languages
+ * @param type {string} 'SCREEN' or 'COMPONENT'
+ * @param object
+ * @returns {*|string}
+ */
+const getJs = (languages, type, object) => {
+    if (!CACHE.has(type[0] + '#' + object)) {
+        compileToCache(type, object);
     }
-    if (!CACHE.has(prefix + object))
+    if (!CACHE.has(type[0] + '#' + object))
         return '';
-    const content = CACHE.get(prefix + object).js;
+    const content = CACHE.get(type[0] + '#' + object).js;
     if (content === undefined)
         return '';
     return parseContent(languages, content);
 }
 
-const getScreenHtml = (languages, screen) => {
-    return getHtml(languages, 's#', screen);
-}
-
-const getScreenJs = (languages, screen) => {
-    return getJs(languages, 's#', screen);
-}
-
-const getComponentHtml = (languages, component) => {
-    return getHtml(languages, 'c#', component);
-}
-
-const getComponentJs = (languages, component) => {
-    return getJs(languages, 'c#', component);
-}
-
-module.exports = {getScreenHtml, getScreenJs, getComponentHtml, getComponentJs};
+module.exports = {getJs, getHtml};

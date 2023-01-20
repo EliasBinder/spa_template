@@ -1,10 +1,12 @@
 const express = require('express');
-const {getScreenHtml} = require("../util/renderer");
+const {getHtml} = require("../util/renderer");
 const router = express.Router();
+const enums = require("../util/enums");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send(getScreenHtml('en', 'index'));
+  res.send(getHtml('en', enums.SCREEN, 'index'));
+  next();
 });
 
 module.exports = router;
