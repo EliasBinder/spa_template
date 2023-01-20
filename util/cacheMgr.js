@@ -55,11 +55,8 @@ const compileToCache = (type, object) => {
         const files = fs.readdirSync(dir);
         files.forEach(file => {
             const filePath = path.join(dir, file);
-            if (fs.lstatSync(filePath).isFile()) {
+            if (fs.lstatSync(filePath).isFile())
                 parseFile(filePath);
-            } else if (fs.lstatSync(filePath).isDirectory()) {
-                parseDir(filePath);
-            }
         });
     }
 
