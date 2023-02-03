@@ -3,6 +3,7 @@ const path = require("path");
 const config = require('../app.json');
 const staticContentMgr = require("./frameworkFrontendMgr");
 const enums = require('./enums');
+const uglifyJs = require("uglify-js");
 
 const CACHE = new Map();
 
@@ -103,6 +104,16 @@ const compileToCache = (type, object) => {
     if (type === 'SCREEN' && htmlContent.includes('{{script}}')) {
         htmlContent = htmlContent.replace('{{script}}', `<script>${jsContent}</script>`);
         jsContent = '';
+    }
+
+    //Minify js
+    if (config.mode === 'production') {
+        const minifiedJs = uglifyJs.minify(jsContent);
+        if (minifiedJs.error) {
+            console.error(minifiedJs.error);
+        } else {
+            jsContent = minifiedJs.code;
+        }
     }
 
     let toCache = {

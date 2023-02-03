@@ -2,10 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 const LANGCACHE = new Map();
+const LANGCACHE_LASTCHANGED = new Map();
 
-const parseLanguagesFiled = (languages) => {
+const parseLanguagesField = (languages) => {
+    let result = [];
     if (Array.isArray(languages)) {
-        let result = [];
         languages.forEach((lang) => {
             let simplifiedLang;
             if (lang.includes('-'))
@@ -17,13 +18,9 @@ const parseLanguagesFiled = (languages) => {
             if (!result.includes(simplifiedLang))
                 result.push(encodeURIComponent(simplifiedLang));
         });
-        return result;
+    } else {
+        result.push('en');
     }
-    return ['en'];
-}
-
-const parseContent = (languages, input) => {
-    languages = parseLanguagesFiled(languages);
     let langToUse = 'en';
     for (let lang of languages) {
         if (LANGCACHE.has(lang) || fs.existsSync(path.join(__dirname, '..', 'languages', lang + '.json'))) {
@@ -31,18 +28,34 @@ const parseContent = (languages, input) => {
             break;
         }
     }
+    return langToUse;
+}
 
-    let langJson = {}
-    if (LANGCACHE.has(langToUse)) {
-        langJson = LANGCACHE.get(langToUse);
+const updateLangInCache = (lang) => {
+    if (LANGCACHE.has(lang)) {
+        if (LANGCACHE_LASTCHANGED.get(lang) !== lastChanged(lang)) {
+            LANGCACHE.set(lang, require(`../languages/${lang}.json`));
+            LANGCACHE_LASTCHANGED.set(lang, lastChanged(lang));
+        }
     } else {
-        langJson = require(`../languages/${langToUse}.json`);
-        LANGCACHE.set(langToUse, langJson);
+        LANGCACHE.set(lang, require(`../languages/${lang}.json`));
+        LANGCACHE_LASTCHANGED.set(lang, lastChanged(lang));
     }
+}
+
+const parseContent = (language, input) => {
+    let langToUse = parseLanguagesField(language);
+
+    updateLangInCache(langToUse);
+    let langJson = LANGCACHE.get(langToUse);
 
     return input.replace(/{{lang:(.*?)}}/g, (match, p1) => {
         return langJson[p1] || '';
     });
 }
 
-module.exports = {parseContent};
+const lastChanged = (lang) => {
+    return fs.statSync(path.join(__dirname, '..', 'languages', lang + '.json')).mtime;
+}
+
+module.exports = {parseLanguagesField, parseContent, lastChanged};
