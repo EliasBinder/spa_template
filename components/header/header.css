@@ -1,0 +1,9 @@
+h1 {
+    font-size: 2rem;
+    color: {{config:colors.foreground.primary}}
+}
+
+h2 {
+    font-size: 1.2rem;
+    color: {{config:colors.foreground.secondary}}
+}
