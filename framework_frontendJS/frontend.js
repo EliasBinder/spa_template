@@ -2,24 +2,33 @@
 window._spa = {
     loadingObject: {
         component: null,
-        data: {}
+        props: {}
     },
     currentScreen: null,
     componentIds: {},
-    componentsMap: {}
+    componentsMap: {},
+    urlPath: []
 }
 
 
 //Prepare api
+window.spa.init = (callback) => {
+    callback(window._spa.loadingObject.component, {...window._spa.loadingObject.props}, window._spa.urlPath);
+}
+window.spa.getComponentById = (id) => {
+    return _spa.componentsMap[id]
+}
 
-window.spa = {
-    init: (callback) => {
-            callback(window._spa.loadingObject.component, {...window._spa.loadingObject.data})
-        },
-
-    getComponentById: (id) => {
-            return _spa.componentsMap[id]
-        }
+//set Url path
+if (window.location.pathname !== '/' && window.location.pathname !== '') {
+    //remove first and last / if present
+    let url = window.location.pathname;
+    if (url[0] === '/')
+        url = url.substring(1);
+    if (url[url.length - 1] === '/')
+        url = url.substring(0, url.length - 1);
+    //split url
+    window._spa.urlPath = url.split('/');
 }
 
 

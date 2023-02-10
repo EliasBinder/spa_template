@@ -65,13 +65,14 @@ const inject = (container, object, type, loadingContainer, data) => {
             component.setRootDiv(container);
         }
         if (msg.js) {
-            window._spa.loadingObject.data = data;
+            window._spa.loadingObject.props = data;
             window._spa.loadingObject.component = component;
             eval(msg.js);
-            window._spa.loadingObject.data = {};
+            window._spa.loadingObject.props = {};
             window._spa.loadingObject.id = null;
         }
 
+        //Hide loading container
         if (loadingContainer) {
             container.style.removeProperty('display');
             loadingContainer.style.display = 'none';

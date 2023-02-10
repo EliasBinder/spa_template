@@ -9,8 +9,10 @@ const BUILD_ORDER = [
     'socketio/socketio.js',
     'util.js',
     'socketio/socketio-sync.js',
+    'history/historyMgr.js',
     'componentMgmt/component.js',
     'componentMgmt/componentLoader.js',
+    'componentMgmt/componentTag.js',
     'uiFunctions/update_component.js',
     'socketio/uiSocketHandler.js',
     'frontend.js'
