@@ -10,6 +10,7 @@ const BUILD_ORDER = [
     'util.js',
     'socketio/socketio-sync.js',
     'history/historyMgr.js',
+    'navigation/navigator.js',
     'componentMgmt/component.js',
     'componentMgmt/componentLoader.js',
     'componentMgmt/componentTag.js',

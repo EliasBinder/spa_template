@@ -4,6 +4,7 @@ class Component {
     rootDiv = null;
     active = false;
     externalId = null;
+    navigator = null;
 
     constructor(name, id) {
         this.name = name;
@@ -60,5 +61,14 @@ class Component {
     emit(event, data) {
         if (this.registeredEvents.has(event))
             this.registeredEvents.get(event)(data);
+    }
+
+    //Navigation
+
+    getNavigator() {
+        //Lazy initialization of navigator because not all components need it
+        if (this.navigator === null)
+            this.navigator = new Navigator();
+        return this.navigator;
     }
 }
