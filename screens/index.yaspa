@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="{{config:description}}">
+    <meta name="robots" content="index, follow">
+    <title>{{config:name}}</title>
+</head>
+<body>
+    <style>
+        @font-face {
+            font-family: 'Poppins';
+            src: url(/assets/fonts/Poppins-Regular.ttf) format(ttf);
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: {{config:colors.background.100}}
+        }
+
+        #app {
+            width: 100%;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+    <div id="app"></div>
+    {{framework}}
+    <script>
+        const onUISocketReady = () => {
+            //render specific screen based on url path
+            if (window._spa.urlPath.length > 0) {
+                const screen = window._spa.urlPath.shift();
+                spa.setScreen(screen);
+                return;
+            }
+
+            spa.setScreen('{{config:initialScreen}}');
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 <div class="container">
-    <spa-component name="icon"></spa-component>
-    <spa-component name="header" style="text-align: center"></spa-component>
+    <ya-spa name="icon"></ya-spa>
+    <ya-spa name="header" style="text-align: center"></ya-spa>
 </div>
 <style>
     .container {

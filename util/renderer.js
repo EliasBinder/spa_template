@@ -1,10 +1,11 @@
-const {CACHE, compileToCache} = require('./cacheMgr');
+const {CACHE} = require('./cacheMgr');
+const {compile} = require('./componentCompiler');
 const {parseContent} = require('./languageParser');
 
 
 const getHtml = (languages, type, object) => {
     if (!CACHE.has(type[0] + '#' + object)) {
-        compileToCache(type, object);
+        compile(type, object);
     }
     if (!CACHE.has(type[0] + '#' + object))
         return '';
@@ -23,7 +24,7 @@ const getHtml = (languages, type, object) => {
  */
 const getJs = (languages, type, object) => {
     if (!CACHE.has(type[0] + '#' + object)) {
-        compileToCache(type, object);
+        compile(type, object);
     }
     if (!CACHE.has(type[0] + '#' + object))
         return '';

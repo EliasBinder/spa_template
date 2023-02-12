@@ -12,4 +12,4 @@ class ComponentTag extends HTMLElement {
     }
 }
 
-customElements.define('spa-component', ComponentTag);
+customElements.define('ya-spa', ComponentTag);

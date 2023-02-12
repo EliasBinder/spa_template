@@ -1,8 +1,9 @@
 {
-  "name": "SPA-Framework",
-  "description": "A simple SPA framework",
-  "initialScreen": "history",
+  "name": "YASPA",
+  "description": "Yet another SPA framework",
+  "initialScreen": "home",
   "mode": "development",
+
   "colors": {
     "background": {
       "100": "#010409",

@@ -1,0 +1,16 @@
+<div style="color: #acaa07">This is component 2</div>
+
+<button id="nav">To component 1</button>
+
+<script>
+    spa.init((component, data, urlPath) => {
+
+        const { navigator } = data;
+
+        //spa.history.push('comp2', undefined)
+
+        component.getElementById('nav').addEventListener('click', (e) => {
+            navigator.navigateTo('comp1')
+        })
+    })
+</script>
