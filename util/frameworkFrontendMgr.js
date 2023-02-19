@@ -11,10 +11,12 @@ const BUILD_ORDER = [
     'socketio/socketio-sync.js',
     'history/historyMgr.js',
     'navigation/navigator.js',
+    'intercom/intercom.js',
     'componentMgmt/component.js',
     'componentMgmt/componentLoader.js',
     'componentMgmt/componentTag.js',
     'uiFunctions/update_component.js',
+    'uiFunctions/intercom.js',
     'socketio/uiSocketHandler.js',
     'frontend.js'
 ]

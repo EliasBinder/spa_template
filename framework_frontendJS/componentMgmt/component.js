@@ -6,10 +6,21 @@ class Component {
     externalId = null;
     navigator = null;
 
-    constructor(name, id) {
+    constructor(type, name, id) {
+        this.type = type;
         this.name = name;
         this.internalId = id;
         this.active = true;
+        this.intercom = new Intercom('ui', this.type, this.name);
+
+        //Observe component for changes (delete, change)
+        emitSocketSync('ui', 'observe_component', {
+            name,
+            type,
+            action: 'add'
+        }, (data) => {
+            window._spa.intercom.store.set(data.id, this.intercom);
+        });
     }
 
     //API
@@ -48,7 +59,7 @@ class Component {
 
     unlink() {
         if (this.rootDiv) {
-            this.rootDiv.innerHTML = `<div style="color: red; font-size: 20px; font-weight: bold;">component with name ${this.name} not found</div>`;
+            this.rootDiv.innerHTML = `<span style="color: red; font-size: 20px; font-weight: bold;">component with name ${this.name} not found</span>`;
         }
     }
 
@@ -70,5 +81,10 @@ class Component {
         if (this.navigator === null)
             this.navigator = new Navigator();
         return this.navigator;
+    }
+
+    //Intercom with server side component
+    getIntercom() {
+        return this.intercom;
     }
 }

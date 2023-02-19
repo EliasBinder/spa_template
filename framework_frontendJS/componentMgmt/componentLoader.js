@@ -41,7 +41,7 @@ const inject = (container, object, type, loadingContainer, data) => {
         }
 
         const componentId = uuidv4();
-        const component = new Component(object, componentId);
+        const component = new Component(type, object, componentId);
         window._spa.componentIds[componentId] = component;
         if (msg.html) {
             const preprocess = document.createElement('div');
@@ -77,12 +77,5 @@ const inject = (container, object, type, loadingContainer, data) => {
             container.style.removeProperty('display');
             loadingContainer.style.display = 'none';
         }
-
-        //Observe component for changes (delete, change)
-        emitSocket('ui', 'observe_component', {
-            name: object,
-            type,
-            action: 'add'
-        });
     });
 }

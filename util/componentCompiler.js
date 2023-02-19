@@ -5,6 +5,8 @@ const config = require("../app.json");
 const staticContentMgr = require("./frameworkFrontendMgr");
 const uglifyJs = require("uglify-js");
 const jsdom = require("jsdom");
+const ServerSideComponent = require("./serverSideComponents/serverSideComponent");
+const componentStore = require("./serverSideComponents/componentStore");
 
 const compile = (type, object) => {
     console.log('Compiling ' + type + ' ' + object + '...')
@@ -48,8 +50,26 @@ const compile = (type, object) => {
 
         //exclude scripts
         if (Array.isArray(scripts) && scripts.length > 0) {
+            //Prepare server-side component
+            let serverSideComponent = null;
+            const initServerSideComponent = () => {
+                if (serverSideComponent === null) {
+                    serverSideComponent = new ServerSideComponent(type, object);
+                    componentStore.registerComponent(serverSideComponent);
+                }
+            }
+
             scripts.forEach(script => {
-                jsContent += `(function(){ ${script.textContent} })();`;
+                const scriptContent = `(function(){ ${script.textContent} })();`;
+                if (script.hasAttribute('target') && script.getAttribute('target') === 'server') {
+                    //Server and Client Side component
+                    initServerSideComponent();
+                    const scriptFunction = Function('component', scriptContent);
+                    scriptFunction(serverSideComponent);
+                } else {
+                    //Client Side component
+                    jsContent += scriptContent;
+                }
                 script.parentNode.removeChild(script);
             });
         }

@@ -1,4 +1,19 @@
+<script target="server">
+    console.log('[history.yaspa] This script is executed on the server');
+    //Setup intercom
+    const intercom = component.getIntercom()
+    intercom.on('test', (data, sender) => {
+        console.log('[history.yaspa] Received test event from client: ', data.message);
+        sender.emit('test', {message: 'Received!'});
+        intercom.getConnections().forEach((connection) => {
+            connection.emit('test', {message: 'Update to all clients'});
+        });
+    });
+</script>
+
 <h1>This is the history screen</h1>
+
+<button id="send_to_ssc">Send event to server-side-component</button>
 
 <div id="child-component"></div>
 
@@ -10,6 +25,20 @@
 
 <script>
     spa.init((component, data, urlPath) => {
+        //Test intercom
+
+        const intercom = component.getIntercom()
+
+        component.getElementById('send_to_ssc').addEventListener('click', () => {
+            intercom.emit('test', {message: 'Hello from client'});
+        });
+
+        intercom.on('test', (data, sender) => {
+            console.log('[history.yaspa] Received test event from server-side-component: ', data.message);
+        });
+
+        //Finish test
+
         spa.history.push('history', undefined)
 
         //remove first element from urlPath array and return it

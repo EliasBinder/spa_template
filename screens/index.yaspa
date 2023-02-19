@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <meta name="description" content="{{config:description}}">
     <meta name="robots" content="index, follow">
+    <link rel="shortcut icon" href="/assets/images/icon.svg">
     <title>{{config:name}}</title>
 </head>
 <body>
     <style>
         @font-face {
             font-family: 'Poppins';
-            src: url(/assets/fonts/Poppins-Regular.ttf) format(ttf);
+            src: url('/assets/fonts/Poppins/Poppins-Regular.ttf') format('ttf');
         }
 
         html, body {

@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/assets', express.static('assets'));
-app.use('/*', indexRouter);
+app.use('*', indexRouter);
 
 //build static content for frontend
 staticContentMgr.build();

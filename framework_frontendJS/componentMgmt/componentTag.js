@@ -4,11 +4,13 @@ class ComponentTag extends HTMLElement {
     }
 
     connectedCallback() {
-        //get attributes name and data
+        //get attributes name and props
         const name = this.getAttribute('name');
-        const data = this.getAttribute('data');
+        const props = this.getAttribute('props');
+        //parse props
+        const parsedProps = props ? JSON.parse(props) : {};
         //inject component
-        window.spa.injectComponent(this, name, null, data);
+        window.spa.injectComponent(this, name, null, parsedProps);
     }
 }
 

@@ -3,7 +3,7 @@ const {getHtml} = require("../util/renderer");
 const router = express.Router();
 const enums = require("../util/enums");
 
-/* GET home page. */
+/* GET index page. */
 router.get('/', function(req, res, next) {
   res.send(getHtml('en', enums.SCREEN, 'index'));
   next();

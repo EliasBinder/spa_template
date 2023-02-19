@@ -1,0 +1,50 @@
+<script target="server">
+    const intercom = component.getIntercom()
+    let amount = 100;
+    intercom.on('get', (data, sender) => {
+        sender.emit('change', { amount });
+    });
+    intercom.on('add', (data, sender) => {
+        amount += data.amount;
+        intercom.getConnections().forEach((connection) => {
+            connection.emit('change', { amount });
+        });
+    });
+</script>
+
+<h1>This is a test screen for intercom functionality</h1>
+
+<span id="amount">Loading...</span>
+<br />
+<button id="adder">+1</button>
+
+<style>
+    h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: white;
+    }
+    span {
+        font-size: 2rem;
+        color: aqua;
+    }
+    button {
+        font-size: 1.5rem;
+    }
+</style>
+
+<script target="client">
+    spa.init((component, data, urlPath) => {
+        const intercom = component.getIntercom();
+
+        component.getElementById('adder').addEventListener('click', () => {
+            intercom.emit('add', {amount: 1});
+        });
+
+        intercom.on('change', data => {
+            component.getElementById('amount').innerHTML = data.amount;
+        });
+
+        intercom.emit('get', {})
+    })
+</script>

@@ -1,5 +1,6 @@
 const cacheMgr = require("../../util/cacheMgr");
 const observe_component = require("./functions/observe_component");
+const componentCompiler = require("../../util/componentCompiler");
 const onDeleted = (type, object) => {
     console.log("Deleted " + type.toLowerCase() + " " + object);
     cacheMgr.CACHE.delete(type[0] + '#' + object);
@@ -17,7 +18,7 @@ const onDeleted = (type, object) => {
 const onModified = (type, object) => {
     console.log("Changed " + type.toLowerCase() + " " + object);
     cacheMgr.CACHE.delete(type[0] + '#' + object);
-    cacheMgr.compileToCache(type, object);
+    componentCompiler.compile(type, object);
     if (observe_component.getStorage()[type[0] + '#' + object]) {
         observe_component.getStorage()[type[0] + '#' + object].forEach(socket => {
             socket.emit('update_component', {
