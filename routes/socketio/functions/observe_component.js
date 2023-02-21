@@ -12,8 +12,7 @@ const handle = (socket, msg) => {
         if (!STORAGE[type[0] + '#' + msg.name])
             STORAGE[type[0] + '#' + msg.name] = [];
         STORAGE[type[0] + '#' + msg.name].push(socket)
-        const intercomConnection = new IntercomConnection(socket);
-        componentStore.getComponent(type, msg.name)?.getIntercom().addConnection(intercomConnection);
+        const intercomConnection = new IntercomConnection(socket, type, msg.name);
         socket.emit('resp', {
             reqId: msg.reqId,
             id: intercomConnection.getId()
@@ -24,7 +23,7 @@ const handle = (socket, msg) => {
         STORAGE[type[0] + '#' + msg.name] = STORAGE[type[0] + '#' + msg.name].filter(s => s !== socket) //TODO shorten with slice
         if (STORAGE[type[0] + '#' + msg.name].length === 0)
             delete STORAGE[type[0] + '#' + msg.name];
-        componentStore.getComponent(type, msg.name)?.getIntercom().removeConnection(socket);
+        componentStore.getComponent(type, msg.name)?.getIntercom().removeConnection(socket); //TODO: refactor with id
     }
 }
 

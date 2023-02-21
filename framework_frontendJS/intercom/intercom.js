@@ -2,8 +2,9 @@ class Intercom {
 
     callbacks = new Map();
 
-    constructor(socketId, type, object) {
+    constructor(socketId, intercomId, type, object) {
         this.type = type;
+        this.id = intercomId;
         this.object = object;
         this.socketId = socketId;
     }
@@ -17,7 +18,8 @@ class Intercom {
             type: this.type,
             object: this.object,
             channel,
-            msg
+            msg,
+            id: this.id
         })
     }
 }

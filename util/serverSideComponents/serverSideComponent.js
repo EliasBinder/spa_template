@@ -19,6 +19,10 @@ class ServerSideComponent {
         return this.intercom;
     }
 
+    hasIntercom() {
+        return !!this.intercom;
+    }
+
     getSharedObject(scope) {
         if (!this.sharedObject)
             this.sharedObject = new SharedObject(this.getIntercom());

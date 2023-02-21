@@ -12,8 +12,13 @@ const getComponentNames = () => {
     return Array.from(COMPONENT_STORE.keys());
 }
 
+const getAllComponents = () => {
+    return Array.from(COMPONENT_STORE.values());
+}
+
 module.exports = {
     registerComponent,
     getComponent,
-    getComponentNames
+    getComponentNames,
+    getAllComponents
 }

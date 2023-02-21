@@ -5,13 +5,13 @@ class Component {
     active = false;
     externalId = null;
     navigator = null;
+    intercomId = undefined;
 
     constructor(type, name, id) {
         this.type = type;
         this.name = name;
         this.internalId = id;
         this.active = true;
-        this.intercom = new Intercom('ui', this.type, this.name);
 
         //Observe component for changes (delete, change)
         emitSocketSync('ui', 'observe_component', {
@@ -19,7 +19,7 @@ class Component {
             type,
             action: 'add'
         }, (data) => {
-            window._spa.intercom.store.set(data.id, this.intercom);
+            this.intercomId = data.id;
         });
     }
 
@@ -55,6 +55,15 @@ class Component {
             this.active = false;
             _spa.componentIds[this.id] = null;
         }
+        const _name = this.name;
+        const _type = this.type;
+        //Stop observing component for changes
+        emitSocket('ui', 'observe_component', {
+            _name,
+            _type,
+            action: 'remove'
+        });
+        //TODO: remove from _spa intercom map
     }
 
     unlink() {
@@ -85,6 +94,21 @@ class Component {
 
     //Intercom with server side component
     getIntercom() {
-        return this.intercom;
+        const waitForIntercomId = new Promise((resolve, reject) => {
+            const loop = () => { //loop until intercomId is set
+                if (this.intercomId !== undefined) {
+                    resolve();
+                } else {
+                    setTimeout(loop, 20);
+                }
+            }
+            loop();
+        });
+        return waitForIntercomId.then(() => {
+            console.log('intercomId', this.intercomId);
+            this.intercom = new Intercom('ui', this.intercomId, this.type, this.name);
+            window._spa.intercom.store.set(this.intercomId, this.intercom);
+            return this.intercom;
+        });
     }
 }

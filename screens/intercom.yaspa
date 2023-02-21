@@ -2,6 +2,8 @@
     const intercom = component.getIntercom()
     let amount = 100;
     intercom.on('get', (data, sender) => {
+        console.log('getting data')
+        console.log('sender', sender)
         sender.emit('change', { amount });
     });
     intercom.on('add', (data, sender) => {
@@ -34,17 +36,16 @@
 </style>
 
 <script target="client">
-    spa.init((component, data, urlPath) => {
-        const intercom = component.getIntercom();
-
-        component.getElementById('adder').addEventListener('click', () => {
-            intercom.emit('add', {amount: 1});
-        });
-
-        intercom.on('change', data => {
-            component.getElementById('amount').innerHTML = data.amount;
-        });
-
-        intercom.emit('get', {})
+    spa.init(async (component, data, urlPath) => {
+        component.getIntercom()
+            .then((intercom) => {
+                intercom.on('change', (data) => {
+                    component.getElementById('amount').innerText = data.amount;
+                });
+                component.getElementById('adder').addEventListener('click', () => {
+                    intercom.emit('add', { amount: 1 });
+                });
+                intercom.emit('get', {});
+            });
     })
 </script>
