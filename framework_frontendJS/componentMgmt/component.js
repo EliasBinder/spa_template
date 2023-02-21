@@ -70,12 +70,15 @@ class Component {
         const _name = this.name;
         const _type = this.type;
         //Stop observing component for changes
+        const id = this.intercomId ? {id: this.intercomId} : {};
         emitSocket('ui', 'observe_component', {
             _name,
             _type,
-            action: 'remove'
+            action: 'remove',
+            ...id
         });
-        //TODO: remove from _spa intercom map
+        if (window._spa.intercom.store.has(this.intercomId))
+            window._spa.intercom.store.delete(this.intercomId);
     }
 
     unlink() {
