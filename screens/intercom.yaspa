@@ -35,17 +35,15 @@
 
 <script target="client">
     spa.init((component, data, urlPath) => {
-        component.setOnReady(() => {
-            const intercom = component.getIntercom();
-            const amount = component.getElementById('amount');
-            const adder = component.getElementById('adder');
-            intercom.on('change', (data) => {
-                amount.innerText = data.amount;
-            });
-            adder.addEventListener('click', () => {
-                intercom.emit('add', { amount: 1 });
-            });
-            intercom.emit('get', {});
+        const intercom = component.getIntercom();
+        const amount = component.getElementById('amount');
+        const adder = component.getElementById('adder');
+        intercom.on('change', (data) => {
+            amount.innerText = data.amount;
         });
+        adder.addEventListener('click', () => {
+            intercom.emit('add', { amount: 1 });
+        });
+        intercom.emit('get', {});
     })
 </script>

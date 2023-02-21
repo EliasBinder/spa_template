@@ -67,7 +67,9 @@ const inject = (container, object, type, loadingContainer, data) => {
         if (msg.js) {
             window._spa.loadingObject.props = data;
             window._spa.loadingObject.component = component;
-            eval(msg.js);
+            component.setOnReady(() => {
+                eval(msg.js);
+            });
             window._spa.loadingObject.props = {};
             window._spa.loadingObject.id = null;
         }
