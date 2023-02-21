@@ -7,6 +7,9 @@ class Component {
     navigator = null;
     intercomId = undefined;
 
+    onReady = () => {console.log('onLoaded not implemented')};
+    ready = false;
+
     constructor(type, name, id) {
         this.type = type;
         this.name = name;
@@ -20,6 +23,8 @@ class Component {
             action: 'add'
         }, (data) => {
             this.intercomId = data.id;
+            this.onReady();
+            this.ready = true;
         });
     }
 
@@ -29,6 +34,13 @@ class Component {
         if (this.externalId)
             delete window._spa.componentsMap[this.externalId]
         window._spa.componentsMap[this.externalId] = this;
+    }
+
+    setOnReady(callback) {
+        if (this.ready)
+            callback();
+        else
+            this.onReady = callback;
     }
 
     //Dom manipulation
@@ -94,21 +106,8 @@ class Component {
 
     //Intercom with server side component
     getIntercom() {
-        const waitForIntercomId = new Promise((resolve, reject) => {
-            const loop = () => { //loop until intercomId is set
-                if (this.intercomId !== undefined) {
-                    resolve();
-                } else {
-                    setTimeout(loop, 20);
-                }
-            }
-            loop();
-        });
-        return waitForIntercomId.then(() => {
-            console.log('intercomId', this.intercomId);
-            this.intercom = new Intercom('ui', this.intercomId, this.type, this.name);
-            window._spa.intercom.store.set(this.intercomId, this.intercom);
-            return this.intercom;
-        });
+        this.intercom = new Intercom('ui', this.intercomId, this.type, this.name);
+        window._spa.intercom.store.set(this.intercomId, this.intercom);
+        return this.intercom;
     }
 }
