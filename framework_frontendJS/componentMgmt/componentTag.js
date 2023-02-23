@@ -33,7 +33,7 @@ class ComponentTag extends HTMLElement {
             const componentId = this.getAttribute('component-id');
             if (!componentId) return
             //remove component
-            window.spa.getComponentById(componentId).destroy();
+            window._spa.componentIds[componentId]?.destroy();
             //inject component
             window.spa.injectComponent(this, newValue, null, {});
         }
@@ -48,7 +48,7 @@ class ComponentTag extends HTMLElement {
         const componentId = this.getAttribute('component-id');
         if (componentId)
             //remove component
-            window.spa.getComponentById(componentId).destroy();
+            window._spa.componentIds[componentId].destroy();
         this.skipOnAttribChange = true;
         this.setAttribute('name', component);
         this.skipOnAttribChange = false;
