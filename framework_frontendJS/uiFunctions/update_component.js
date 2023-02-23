@@ -33,10 +33,16 @@ const update_component = (msg) => {
             }
             if (components2.length !== 0) {
                 for (let component of components2) {
+                    const _component = _spa.componentIds[component.getAttribute('component-id')];
                     if (msg.html)
-                        component.innerHTML = msg.html;
-                    if (msg.js)
+                        _injectHTML(component, msg.html, _component);
+                    if (msg.js) {
+                        window._spa.loadingObject.props = _component.getProps();
+                        window._spa.loadingObject.component = _component;
                         eval(msg.js);
+                        window._spa.loadingObject.props = {};
+                        window._spa.loadingObject.component = null;
+                    }
                 }
             } else {
                 emitSocket('ui', 'observe_component', {

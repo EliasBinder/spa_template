@@ -15,6 +15,14 @@ const init = (io) => {
                     if (connection)
                         connection.destroy();
                 });
+            //remove component from observed components
+            const storage = require("./functions/observe_component").getStorage();
+            Object.keys(storage).forEach(key => {
+                const map = storage[key];
+                if (map.has(socket)) {
+                    map.delete(socket);
+                }
+            });
         });
         addListeners(socket);
     });

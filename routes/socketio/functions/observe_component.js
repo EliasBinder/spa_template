@@ -11,8 +11,12 @@ const handle = (socket, msg) => {
     const type = msg.type;
     if (msg.action === 'add') {
         if (!STORAGE[type[0] + '#' + msg.name])
-            STORAGE[type[0] + '#' + msg.name] = [];
-        STORAGE[type[0] + '#' + msg.name].push(socket)
+            STORAGE[type[0] + '#' + msg.name] = new Map();
+        const map = STORAGE[type[0] + '#' + msg.name];
+        if (map.has(socket))
+            map.set(socket, map.get(socket) + 1);
+        else
+            map.set(socket, 1);
         const intercomConnection = new IntercomConnection(socket, type, msg.name);
         socket.emit('resp', {
             reqId: msg.reqId,
@@ -21,9 +25,13 @@ const handle = (socket, msg) => {
     } else if (msg.action === 'remove') {
         if (STORAGE[type[0] + '#' + msg.name] === undefined)
             return;
-        STORAGE[type[0] + '#' + msg.name] = STORAGE[type[0] + '#' + msg.name].filter(s => s !== socket)
-        if (STORAGE[type[0] + '#' + msg.name].length === 0)
-            delete STORAGE[type[0] + '#' + msg.name];
+        const map = STORAGE[type[0] + '#' + msg.name];
+        if (map.has(socket)) {
+            if (map.get(socket) === 1)
+                map.delete(socket);
+            else
+                map.set(socket, map.get(socket) - 1);
+        }
         if (msg.id)
             componentStore.getComponent(type, msg.name)?.getIntercom().removeConnection(intercomConnection.getConnection(socket, msg.id));
     }

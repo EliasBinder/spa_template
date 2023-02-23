@@ -7,8 +7,10 @@ class Component {
     navigator = null;
     intercomId = undefined;
 
-    onReady = () => {console.log('onLoaded not implemented')};
+    onReady = () => {};
     ready = false;
+
+    props = {};
 
     constructor(type, name, id) {
         this.type = type;
@@ -41,6 +43,14 @@ class Component {
             callback();
         else
             this.onReady = callback;
+    }
+
+    setProps(props) {
+        this.props = props;
+    }
+
+    getProps() {
+        return this.props;
     }
 
     //Dom manipulation

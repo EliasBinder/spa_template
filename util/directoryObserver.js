@@ -6,18 +6,12 @@ const fs = require("fs");
 const enums = require("./enums");
 
 const watchObjectDirectory = (pathToWatch, type) => {
-    const parentFolderName = path.basename(pathToWatch);
-    chokidar.watch(pathToWatch).on('unlinkDir', (_path) => {
+    chokidar.watch(pathToWatch).on('unlink', (_path) => {
         const deletedComponent = _path.replace(pathToWatch + '/', '');
         observerCallbacks.onDeleted(type, deletedComponent);
     });
     chokidar.watch(pathToWatch).on('change', (_path) => {
-        let changedComponent;
-        if (fs.lstatSync(_path).isDirectory()){
-            changedComponent = _path.replace(pathToWatch + '/', '');
-        } else {
-            changedComponent = path.dirname(_path).replace(pathToWatch + '/', '')
-        }
+        let changedComponent  = path.basename(_path, path.extname(_path));
         observerCallbacks.onModified(type, changedComponent);
     });
 }

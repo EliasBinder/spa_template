@@ -1,3 +1,25 @@
+const _injectHTML = (container, html, component) => {
+    const preprocess = document.createElement('div');
+    preprocess.innerHTML = html;
+    const parseChild = (child) => {
+        if (child.hasAttribute('id')) {
+            child.id = component.internalId + '-' + child.getAttribute('id');
+        }
+        if (child.getAttribute('for')) {
+            child.setAttribute('for', component.internalId + '_' + child.getAttribute('for'));
+        }
+        if (child.children){
+            for (let i = 0; i < child.children.length; i++) {
+                parseChild(child.children[i]);
+            }
+        }
+    }
+    parseChild(preprocess);
+    container.innerHTML = preprocess.innerHTML;
+    container.setAttribute('component-id', component.internalId);
+    component.setRootDiv(container);
+}
+
 const inject = (container, object, type, loadingContainer, data) => {
 
     //Display loading container
@@ -44,34 +66,17 @@ const inject = (container, object, type, loadingContainer, data) => {
         const component = new Component(type, object, componentId);
         window._spa.componentIds[componentId] = component;
         if (msg.html) {
-            const preprocess = document.createElement('div');
-            preprocess.innerHTML = msg.html;
-            const parseChild = (child) => {
-                if (child.hasAttribute('id')) {
-                    child.id = componentId + '-' + child.getAttribute('id');
-                }
-                if (child.getAttribute('for')) {
-                    child.setAttribute('for', componentId + '_' + child.getAttribute('for'));
-                }
-                if (child.children){
-                    for (let i = 0; i < child.children.length; i++) {
-                        parseChild(child.children[i]);
-                    }
-                }
-            }
-            parseChild(preprocess);
-            container.innerHTML = preprocess.innerHTML;
-            container.setAttribute('component-id', componentId);
-            component.setRootDiv(container);
+            _injectHTML(container, msg.html, component);
         }
         if (msg.js) {
             window._spa.loadingObject.props = data;
             window._spa.loadingObject.component = component;
+            component.setProps(data);
             component.setOnReady(() => {
                 eval(msg.js);
+                window._spa.loadingObject.props = {};
+                window._spa.loadingObject.component = null;
             });
-            window._spa.loadingObject.props = {};
-            window._spa.loadingObject.id = null;
         }
 
         //Hide loading container
