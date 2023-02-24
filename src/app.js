@@ -2,10 +2,10 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const indexRouter = require('./routes/index');
-const staticContentMgr = require("./util/frameworkFrontendMgr");
-const cacheMgr = require("./util/cacheMgr");
-const directoryObserver = require("./util/directoryObserver");
+const indexRouter = require('./internal/routes');
+const staticContentMgr = require("./internal/util/frameworkFrontendMgr");
+const cacheMgr = require("./internal/util/cacheMgr");
+const directoryObserver = require("./internal/util/directoryObserver");
 
 const app = express();
 

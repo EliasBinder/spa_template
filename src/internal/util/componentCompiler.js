@@ -1,7 +1,7 @@
 const enums = require("./enums");
 const path = require("path");
 const fs = require("fs");
-const config = require("../app.json");
+const config = require("../../../app.json");
 const staticContentMgr = require("./frameworkFrontendMgr");
 const uglifyJs = require("uglify-js");
 const jsdom = require("jsdom");
@@ -21,8 +21,8 @@ const compile = (type, object) => {
         componentContent = fs.readFileSync(file, 'utf8');
     }
 
-    const componentDir = path.join(__dirname, '..', type.toLowerCase() + 's', object + '.yaspa');
-    const parentDir = path.join(__dirname, '..', type.toLowerCase() + 's');
+    const componentDir = path.join(__dirname, '../..', type.toLowerCase() + 's', object + '.yaspa');
+    const parentDir = path.join(__dirname, '../..', type.toLowerCase() + 's');
     if (!path.normalize(componentDir).startsWith(path.normalize(parentDir))) //Prevent path traversal
         return;
     if (!fs.existsSync(componentDir))

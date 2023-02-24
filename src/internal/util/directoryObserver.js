@@ -18,9 +18,9 @@ const watchObjectDirectory = (pathToWatch, type) => {
 
 const startWatching = () => {
     console.log("Starting to watch directories...");
-    const componentsPath = path.join(__dirname, "../components");
+    const componentsPath = path.join(__dirname, "../../components");
     watchObjectDirectory(componentsPath, enums.COMPONENT);
-    const screensPath = path.join(__dirname, "../screens");
+    const screensPath = path.join(__dirname, "../../screens");
     watchObjectDirectory(screensPath, enums.SCREEN);
 }
 

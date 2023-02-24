@@ -1,5 +1,5 @@
 <h1>This is the history screen</h1>
-<h2>Some test subtitle 123</h2>
+<h2>Some test subtitle 12345</h2>
 
 <ya-spa id="child-component"></ya-spa>
 

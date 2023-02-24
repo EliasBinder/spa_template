@@ -7,14 +7,14 @@ const CACHE = new Map();
 
 const cache2File = () => {
     console.log('Exporting cache to file...');
-    const cacheFile = path.join(__dirname, '..', 'cache.json');
+    const cacheFile = path.join(__dirname, '../../..', 'cache.json');
     fs.writeFileSync(cacheFile, JSON.stringify(Object.fromEntries(CACHE)), 'utf8');
     console.log('Cache exported to file.');
 }
 
 const file2Cache = () => {
     console.log('Importing cache from file...');
-    const cacheFile = path.join(__dirname, '..', 'cache.json');
+    const cacheFile = path.join(__dirname, '../../..', 'cache.json');
     if (fs.existsSync(cacheFile)) {
         const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
         for (let key in cache) {
