@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node src/internal/bin/www.js",
-    "startUsingBun": "bun src/internal/bin/www.js"
+    "bun": "bun src/internal/bin/www.js"
   },
   "dependencies": {
     "chokidar": "^3.5.3",
     "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
+    "debug": "~4.3.4",
     "express": "~4.18.2",
     "jsdom": "^21.1.0",
     "morgan": "~1.9.1",

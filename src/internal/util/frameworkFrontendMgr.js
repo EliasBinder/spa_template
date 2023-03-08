@@ -15,6 +15,7 @@ const BUILD_ORDER = [
     'componentMgmt/component.js',
     'componentMgmt/componentLoader.js',
     'componentMgmt/componentTag.js',
+    'componentMgmt/componentCleanup.js',
     'uiFunctions/update_component.js',
     'uiFunctions/intercom.js',
     'socketio/uiSocketHandler.js',

@@ -4,8 +4,8 @@
  * Module dependencies.
  */
 
-const app = require('../app');
-const debug = require('debug')('spa-template:server');
+const app = require('../../app');
+const debug = require('debug')('yaspa:server');
 const http = require('http');
 
 /**
@@ -93,5 +93,5 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
   serveClient: false
 });
-const sioHandler = require('../src/routes/socketio/ioHandler');
+const sioHandler = require('../routes/socketio/ioHandler');
 sioHandler.init(io);
