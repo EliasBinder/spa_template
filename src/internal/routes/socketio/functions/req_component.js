@@ -16,7 +16,7 @@ const handle = (socket, msg) => {
     const langToUse = parseLanguagesField(msg.languages);
     const langLastModified = lastChanged(langToUse);
     //Check config if modified
-    const configLastModified = fs.statSync(path.join(__dirname, '../../../../../app.json')).mtime;
+    const configLastModified = fs.statSync(path.join(global.cwd, 'app.json')).mtime;
     if (lastModifiedComponent === msg.lastModified && msg.lastModified >= langLastModified && msg.lastModified >= configLastModified) {
         socket.emit('resp', {
             reqId: msg.reqId,

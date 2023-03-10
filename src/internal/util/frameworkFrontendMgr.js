@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const appJson = require('../../../app.json');
+const appJson = require(path.join(global.cwd, 'app.json'));
 const uglifyJs = require("uglify-js");
 
 let jsContent = '';

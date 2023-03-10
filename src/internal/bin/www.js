@@ -4,9 +4,13 @@
  * Module dependencies.
  */
 
-const app = require('../../app');
+global.cwd = process.cwd();
+
+const path = require('path');
+const app = require(path.join(global.cwd, 'src/app.js'));
 const debug = require('debug')('yaspa:server');
 const http = require('http');
+
 
 /**
  * Get port from environment and store in Express.
