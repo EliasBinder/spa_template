@@ -6,8 +6,7 @@
 
 global.cwd = process.cwd();
 
-const path = require('path');
-const app = require(path.join(global.cwd, 'src/app.js'));
+const app = require('../../app');
 const debug = require('debug')('yaspa:server');
 const http = require('http');
 
