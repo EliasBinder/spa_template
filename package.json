@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node src/internal/bin/www.js",
-    "bun": "bun src/internal/bin/www.js"
+    "bun": "bun src/internal/bin/start.js"
   },
   "dependencies": {
     "chokidar": "^3.5.3",
