@@ -21,7 +21,7 @@ class Navigator {
 
     navigateTo(name, data = {}) {
         const navigate = (name) => {
-            this.routes.get(name).onLoad(data);
+            this.routes.get(name).onLoad({...data});
         }
         if (this.routes.has(name)) {
             window.spa.history.set([...this.rootPath, name], ({ name }) => {
