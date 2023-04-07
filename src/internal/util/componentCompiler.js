@@ -60,7 +60,15 @@ const compile = (type, object) => {
             }
 
             scripts.forEach(script => {
-                const scriptContent = `(function(){ ${script.textContent} })();`;
+                let scriptContent = `(function(){ ${script.textContent} })();`;
+                
+                const importRegex = /import\s+"(.*)";?/g
+                let match;
+                while(match = importRegex.exec(scriptContent)) {
+                    const libraryCode = fs.readFileSync(path.join(global.cwd, match[1]), {encoding: 'utf-8'})
+                    scriptContent = scriptContent.replace(match[0], `(function(){ ${libraryCode} })();`);
+                }
+
                 if (script.hasAttribute('target') && script.getAttribute('target') === 'server') {
                     //Server and Client Side component
                     initServerSideComponent();

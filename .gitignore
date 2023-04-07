@@ -745,3 +745,4 @@ FodyWeavers.xsd
 
 # Component and screen cache file
 /cache.json
+.vscode/
